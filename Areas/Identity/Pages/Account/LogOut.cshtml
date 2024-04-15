@@ -1,0 +1,21 @@
+﻿@page
+@attribute [IgnoreAntiforgeryToken]
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authentication
+@inject SignInManager<IdentityUser> SignInManager
+
+@functions {
+    public async Task<IActionResult> OnPost()
+    {
+        if (SignInManager.IsSignedIn(User))
+        {
+            // Sign out from the local identity provider
+            await SignInManager.SignOutAsync();
+
+            // Clear external login schemes when logging out
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+        }
+
+        return Redirect("~/");
+    }
+}

@@ -1,0 +1,135 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Open Sans', sans-serif;
+        background-image: url('/bus.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    .container {
+        margin-top: 20px;
+        margin-right: auto;
+        margin-left: auto;
+        width: 80%;
+        height: auto;
+    }
+
+    h1 {
+        color: #007bff;
+    }
+
+    button {
+        margin-top: 10px;
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .checkbox {
+        margin-bottom: 15px;
+    }
+
+    a {
+        color: #007bff;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<div class="container text-center" style="background-color: white; border: 2px solid #ccc; border-radius: 10px; height: 65vh; padding: 20px; width: 50%;">
+    <h3>@ViewData["Title"]</h3>
+
+    @if ((Model.ExternalLogins?.Count ?? 0) == 0)
+    {
+        <div>
+            <p>
+                There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715"> article about setting up this ASP.NET application to support logging in via external services </a>.
+            </p>
+        </div>
+    }
+    else
+    {
+        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+            <div>
+                <p>
+                    @foreach (var provider in Model.ExternalLogins)
+                    {
+                        if (provider.Name == "Google")
+                        {
+                            <button type="submit" class="btn btn-outline-primary" style="width:100%;" name="provider" value="@provider.Name" title="Log in using your Google account">
+                                <img src="~/Google_logo-removebg-preview.png" style="height: 20px; width: 20px; margin-left: 5px;"> Log in with Google
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                        }
+                    }
+                </p>
+            </div>
+        </form>
+    }
+
+    <form id="login-form" asp-page="./Mpendulo Ngubane" method="post">
+        <div class="form-floating mb-3">
+            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com">
+            <label asp-for="Input.Email" class="form-label">Email</label>
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </div>
+        <div class="form-floating mb-3">
+            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password">
+            <label asp-for="Input.Password" class="form-label">Password</label>
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+
+        <div class="checkbox mb-3" style="text-align: left;">
+            <label asp-for="Input.RememberMe" class="form-label">
+                <input class="form-check-input" asp-for="Input.RememberMe" /> @Html.DisplayNameFor(m => m.Input.RememberMe)
+            </label>
+        </div>
+        <div>
+            <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+        </div>
+    </form>
+
+    <div style="float: right; margin-top: 10px;">
+        <p>
+            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+        </p>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
